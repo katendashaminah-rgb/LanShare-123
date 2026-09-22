@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}LANShare 50{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand-mark">
+          <div class="brand-icon">LS</div>
+          <div>
+            <div class="brand">LANShare</div>
+            <span>by Shamina</span>
+          </div>
+        </div>
+        <div class="sidebar-label">Workspace</div>
+        <nav>
+          <a href="/dashboard"><span class="nav-icon">⌂</span>Dashboard</a>
+          <a href="/files"><span class="nav-icon">▤</span>Files</a>
+          <a href="/devices"><span class="nav-icon">⌁</span>Devices</a>
+          <a href="/settings"><span class="nav-icon">⚙</span>Settings</a>
+        </nav>
+        <div class="sidebar-footer">
+          <span class="status-dot"></span>
+          <div><strong>Network ready</strong><small>Private LAN workspace</small></div>
+        </div>
+      </aside>
+      <main class="main-panel">
+        <header class="topbar">
+          <div class="topbar-kicker">PRIVATE NETWORK / <span>LIVE</span></div>
+          <div class="topbar-device"><span class="status-dot"></span> LANShare-PC</div>
+        </header>
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>

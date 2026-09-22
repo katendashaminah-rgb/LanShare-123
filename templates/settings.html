@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings | LANShare 50{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <div class="heading-row">
+    <div><div class="eyebrow">Workspace preferences</div><h1>Settings</h1><p class="page-subtitle">Review how this LANShare instance is configured.</p></div>
+  </div>
+  <div class="settings-grid">
+    <div class="settings-card">
+      <h3>Application</h3>
+      <label>Application name</label>
+      <input type="text" value="LANShare 50" readonly>
+      <label>Port</label>
+      <input type="text" value="5000" readonly>
+      <label>Storage limit</label>
+      <input type="text" value="50,000,000,000 bytes" readonly>
+    </div>
+    <div class="settings-card">
+      <h3>Network</h3>
+      <label>Device name</label>
+      <input type="text" value="LANShare-PC" readonly>
+      <label>Discovery interval</label>
+      <input type="text" value="5 seconds" readonly>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | LANShare 50{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <div class="heading-row">
+    <div>
+      <div class="eyebrow">Your private file network</div>
+      <h1>Good to see you, Shamina<span class="accent-dot">.</span></h1>
+      <p class="page-subtitle">Move files between your devices with calm, secure simplicity.</p>
+    </div>
+    <div class="live-chip"><span class="status-dot"></span> Live workspace</div>
+  </div>
+
+  <div class="storage-box">
+    <div class="storage-header">
+      <div>
+        <div class="eyebrow">Storage overview</div>
+        <h2>Keep your workspace moving</h2>
+      </div>
+      <div id="storage-readout" class="storage-readout">0 GB <span>/ 50 GB</span></div>
+    </div>
+    <div class="bar">
+      <div id="storage-bar" class="bar-fill"></div>
+    </div>
+    <div class="storage-meta"><div id="storage-summary" class="storage-summary">0% used</div><span>Encrypted on this device</span></div>
+    <div class="action-row">
+      <button class="primary" id="upload-button" type="button"><span>↑</span> Upload files</button>
+      <input id="upload-input" type="file" multiple hidden>
+      <button id="new-folder-button" type="button"><span>＋</span> New folder</button>
+    </div>
+  </div>
+
+  <div class="grid two-col">
+    <div class="panel-inner">
+      <div class="section-heading"><div><div class="eyebrow">Organize</div><h3>My files</h3></div><a href="/files" class="text-link">View all →</a></div>
+      <ul class="folder-list">
+        <li><span class="folder-icon folder-blue">▱</span><span>Documents</span><small>Shared files</small></li>
+        <li><span class="folder-icon folder-coral">▱</span><span>Pictures</span><small>Media</small></li>
+        <li><span class="folder-icon folder-yellow">▱</span><span>Videos</span><small>Media</small></li>
+        <li><span class="folder-icon folder-teal">▱</span><span>Music</span><small>Media</small></li>
+      </ul>
+    </div>
+    <div class="panel-inner">
+      <div class="section-heading"><div><div class="eyebrow">Connected nearby</div><h3>Devices on LAN</h3></div><a href="/devices" class="text-link">Manage →</a></div>
+      <ul id="lan-devices" class="device-list"></ul>
+    </div>
+  </div>
+</section>
+{% endblock %}

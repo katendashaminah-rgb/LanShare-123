@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Files | LANShare 50{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <div class="heading-row">
+    <div><div class="eyebrow">Your library</div><h1>Files</h1><p class="page-subtitle">Everything stored in your private workspace.</p></div>
+    <a class="primary button-link" href="/dashboard">↑ Upload files</a>
+  </div>
+  <div class="file-toolbar"><div class="breadcrumbs" id="breadcrumbs">Home / All files</div><span class="toolbar-note">Local storage</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Icon</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Size</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="file-table-body"></tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

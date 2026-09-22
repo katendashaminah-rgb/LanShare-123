@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Devices | LANShare 50{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <div class="heading-row">
+    <div><div class="eyebrow">Private network</div><h1>Devices</h1><p class="page-subtitle">Browse and move files across your local network.</p></div>
+    <button id="refresh-devices"><span>↻</span> Refresh devices</button>
+  </div>
+  <div class="network-banner"><span class="status-dot"></span><div><strong>Discovery is active</strong><small>LANShare is looking for nearby devices on your network.</small></div></div>
+  <div id="device-list" class="device-card-list"></div>
+</section>
+{% endblock %}
