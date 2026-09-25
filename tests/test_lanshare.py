@@ -152,6 +152,23 @@ def test_invalid_upload_and_large_file_safety(temp_storage):
     assert saved.stat().st_size == 1_048_576
 
 
+def test_upload_reports_saved_location(temp_storage):
+    import os
+
+    os.environ["LANSHARE_STORAGE_DIR"] = str(temp_storage)
+    app = create_app({"TESTING": True})
+    response = app.test_client().post(
+        "/api/upload",
+        data={"file": (io.BytesIO(b"hello"), "greeting.txt"), "folder": "Documents"},
+        content_type="multipart/form-data",
+    )
+
+    payload = response.get_json()
+    assert response.status_code == 200
+    assert payload["relative_path"] == "Documents/greeting.txt"
+    assert Path(payload["saved_to"]) == temp_storage / "Documents" / "greeting.txt"
+
+
 def test_interrupted_upload_cleanup(temp_storage):
     manager = StorageManager(storage_root=str(temp_storage), max_bytes=50_000_000_000)
     temp_path = manager.start_temp_upload("Documents/broken.bin")

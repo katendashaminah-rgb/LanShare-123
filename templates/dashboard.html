@@ -30,6 +30,10 @@
       <input id="upload-input" type="file" multiple hidden>
       <button id="new-folder-button" type="button"><span>＋</span> New folder</button>
     </div>
+    <div id="upload-status" class="upload-status" aria-live="polite" hidden>
+      <div class="upload-status-header"><strong id="upload-status-text">Preparing uploads...</strong><span id="upload-progress-value">0 / 0</span></div>
+      <ul id="upload-list" class="upload-list"></ul>
+    </div>
   </div>
 
   <div class="grid two-col">

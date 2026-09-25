@@ -88,7 +88,13 @@ def api_upload():
         temp_path = resolved.with_suffix(resolved.suffix + ".part")
         file_obj.save(temp_path)
         temp_path.replace(resolved)
-        return jsonify({"status": "ok", "path": str(rel_path)})
+        relative_path = Path(rel_path).as_posix()
+        return jsonify({
+            "status": "ok",
+            "path": relative_path,
+            "relative_path": relative_path,
+            "saved_to": str(resolved),
+        })
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
 

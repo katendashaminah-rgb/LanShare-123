@@ -117,30 +117,117 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
+  const uploadFile = (file, onProgress) => new Promise((resolve, reject) => {
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('folder', 'Documents');
+
+    const request = new XMLHttpRequest();
+    request.open('POST', '/api/upload');
+    request.upload.addEventListener('progress', (event) => {
+      if (event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
+    });
+    request.addEventListener('load', () => {
+      let payload;
+      try {
+        payload = JSON.parse(request.responseText);
+      } catch (error) {
+        reject(new Error('The server returned an invalid upload response.'));
+        return;
+      }
+      if (request.status < 200 || request.status >= 300) {
+        reject(new Error(payload.error || 'Upload failed'));
+        return;
+      }
+      resolve(payload);
+    });
+    request.addEventListener('error', () => reject(new Error('The upload could not reach the server.')));
+    request.addEventListener('abort', () => reject(new Error('Upload cancelled.')));
+    request.send(formData);
+  });
+
   const uploadFiles = async (files) => {
     if (!files || files.length === 0) return;
 
-    for (const file of files) {
-      const formData = new FormData();
-      formData.append('file', file, file.name);
-      formData.append('folder', 'Documents');
+    const status = document.getElementById('upload-status');
+    const statusText = document.getElementById('upload-status-text');
+    const progressValue = document.getElementById('upload-progress-value');
+    const uploadList = document.getElementById('upload-list');
+    const uploadButton = document.getElementById('upload-button');
+    if (status) status.hidden = false;
+    if (uploadButton) uploadButton.disabled = true;
+    if (uploadList) uploadList.innerHTML = '';
 
+    const items = Array.from(files).map((file) => {
+      const item = document.createElement('li');
+      item.className = 'upload-item';
+      item.innerHTML = `
+        <div class="upload-item-header">
+          <span class="upload-state-icon">...</span>
+          <div class="upload-file-details"><strong></strong><small>Queued</small></div>
+          <span class="upload-item-percent">0%</span>
+        </div>
+        <div class="upload-progress-track"><div class="upload-progress"></div></div>
+        <div class="upload-location"></div>
+      `;
+      item.querySelector('strong').textContent = file.name;
+      uploadList?.appendChild(item);
+      return {
+        file,
+        item,
+        state: item.querySelector('.upload-file-details small'),
+        icon: item.querySelector('.upload-state-icon'),
+        percent: item.querySelector('.upload-item-percent'),
+        progress: item.querySelector('.upload-progress'),
+        location: item.querySelector('.upload-location'),
+      };
+    });
+
+    let processed = 0;
+    let succeeded = 0;
+    let failed = 0;
+    const updateSummary = () => {
+      if (statusText) {
+        statusText.textContent = processed === items.length
+          ? (failed ? 'Uploads finished with errors' : 'Uploads complete')
+          : `Uploading ${processed + 1} of ${items.length}`;
+      }
+      if (progressValue) progressValue.textContent = `${succeeded} uploaded${failed ? `, ${failed} failed` : ''}`;
+    };
+    updateSummary();
+
+    for (const upload of items) {
+      const { file, state, icon, percent, progress, location } = upload;
       try {
-        const response = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
+        state.textContent = 'Uploading';
+        icon.textContent = '↑';
+        upload.item.classList.add('is-uploading');
+        const payload = await uploadFile(file, (percent) => {
+          progress.style.width = `${percent}%`;
+          upload.item.querySelector('.upload-item-percent').textContent = `${percent}%`;
         });
-        const payload = await response.json();
-        if (!response.ok) {
-          throw new Error(payload.error || 'Upload failed');
-        }
-        console.log('Uploaded:', payload);
+        state.textContent = 'Uploaded';
+        icon.textContent = '✓';
+        percent.textContent = '100%';
+        progress.style.width = '100%';
+        location.textContent = `Saved to ${payload.relative_path}`;
+        upload.item.classList.remove('is-uploading');
+        upload.item.classList.add('is-complete');
+        succeeded += 1;
       } catch (error) {
         console.error('Upload error:', error);
-        alert(error.message || 'Upload failed');
+        state.textContent = 'Could not upload';
+        icon.textContent = '!';
+        location.textContent = error.message || 'Upload failed';
+        upload.item.classList.remove('is-uploading');
+        upload.item.classList.add('is-failed');
+        failed += 1;
       }
+      processed += 1;
+      updateSummary();
     }
 
+    if (uploadButton) uploadButton.disabled = false;
     updateStorage();
     loadLocalFiles();
   };
